@@ -586,7 +586,10 @@ async function cropFromSlot(slotName, targetCount, progStart, progEnd) {
   const W = img.width, H = img.height;
   const ratioW = W / ACTIVE_PRESET.canvas.w;
   const ratioH = H / ACTIVE_PRESET.canvas.h;
-  const safeBase = (slot.fileName || 'onestop').replace(/[\/\\:*?"<>|]/g, '_');
+  // 사용자가 입력한 ZIP 파일명을 우선 사용, 없으면 슬롯 파일명으로 fallback
+  const customZip = $('zipName').value.trim();
+  const baseName = customZip || slot.fileName || 'onestop';
+  const safeBase = baseName.replace(/[\/\\:*?"<>|]/g, '_').replace(/\.zip$/i, '');
 
   for (let i = 0; i < targetCount; i++) {
     const coord = ACTIVE_PRESET.coords[i];
@@ -616,7 +619,10 @@ async function cropAndScaleOGQ(targetCount, progStart, progEnd) {
   const W = img.width, H = img.height;
   const ratioW = W / ACTIVE_PRESET.canvas.w;
   const ratioH = H / ACTIVE_PRESET.canvas.h;
-  const safeBase = (slot.fileName || 'onestop').replace(/[\/\\:*?"<>|]/g, '_');
+  // 사용자 ZIP 입력 우선, 없으면 슬롯 파일명. 카카오 슬롯 파일명도 fallback으로 사용 (오지큐만 채운 경우 대비)
+  const customZip = $('zipName').value.trim();
+  const baseName = customZip || slot.fileName || slots.kakao.fileName || 'onestop';
+  const safeBase = baseName.replace(/[\/\\:*?"<>|]/g, '_').replace(/\.zip$/i, '');
 
   for (let i = 0; i < targetCount; i++) {
     const coord = ACTIVE_PRESET.coords[i];
